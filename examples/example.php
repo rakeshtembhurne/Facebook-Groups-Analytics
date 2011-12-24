@@ -8,8 +8,8 @@ require_once '../FbStats.php';
 if( ! session_id()) session_start();
 
 $config = array(
-	'appId' => 'APPID',
-	'secret' => 'APPSECRET',
+	'appId' => '203197653102145',
+	'secret' => '592c7f0630ce83f943c7645384d1e7f5',
 	'permissionsArray' => array(
 		'publish_stream',
 		'read_stream',
@@ -29,10 +29,16 @@ $feedParams = array(
     'source_id' => $ngpPhpUserGroupId,
     'limit' => 500
 );
-$group_feed = $fb->getFeed($feedParams);
-$users 		= $fb->topPosters($group_feed);
+//get Group Feed
+$groupFeed = $fb->getFeed($feedParams);
+// totalStatusChars - counts total characters of status updates
+//$users 	   = $fb->getTopUsers($groupFeed, 'totalStatusChars', 5);
+//
+// totalLinks - counts number of links posted by users
+$users 	   = $fb->getTopUsers($groupFeed, 'didComment', 5);
+
 ?>
-<pre><?php //var_dump($group_feed);?></pre>
+<pre><?php //var_dump($users);exit;?></pre>
 <table cellspacing="5">
 <!-- table head -->
 <?php $count = 0; ?>

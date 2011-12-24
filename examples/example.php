@@ -8,8 +8,8 @@ require_once '../FbStats.php';
 if( ! session_id()) session_start();
 
 $config = array(
-	'appId' => '203197653102145',
-	'secret' => '592c7f0630ce83f943c7645384d1e7f5',
+	'appId' => 'APPID',
+	'secret' => 'APPSECRET',
 	'permissionsArray' => array(
 		'publish_stream',
 		'read_stream',

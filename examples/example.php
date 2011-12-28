@@ -8,8 +8,8 @@ require_once '../FbStats.php';
 if( ! session_id()) session_start();
 
 $config = array(
-	'appId' => 'APPID',
-	'secret' => 'APPSECRET',
+	'appId' => 'YOUR_APP_ID',
+	'secret' => 'YOUR_APP_SECRET',
 	'permissionsArray' => array(
 		'publish_stream',
 		'read_stream',
@@ -23,19 +23,26 @@ $config = array(
 $ngpPhpUserGroupId = '107329506051213';
 
 $fb = new FbStats($config);
+
 // will give you any feed (you must have permissions to access), just pass right id
 // write 'me' in parameter and you shall get users who wrote on your wall
 $feedParams = array(
-    'source_id' => $ngpPhpUserGroupId,
-    'limit' => 500
+    'sourceId' => $ngpPhpUserGroupId,
+    'limit' => 500,
+    'since' => 'last+Year',
 );
 //get Group Feed
-$groupFeed = $fb->getFeed($feedParams);
+try {
+    $groupFeed = $fb->getFeed($feedParams);
+} catch (Exception $e) {
+    echo $e->getMessage();
+}
+
 // totalStatusChars - counts total characters of status updates
-//$users 	   = $fb->getTopUsers($groupFeed, 'totalStatusChars', 5);
+$users 	   = $fb->getTopUsers($groupFeed, 'totalStatusChars', 5);
 //
 // totalLinks - counts number of links posted by users
-$users 	   = $fb->getTopUsers($groupFeed, 'didComment', 5);
+//$users 	   = $fb->getTopUsers($groupFeed, 'didComment', 5);
 
 ?>
 <pre><?php //var_dump($users);exit;?></pre>

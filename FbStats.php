@@ -60,6 +60,8 @@ class FbStats
      */
     public $afterLoginUrl;
 
+    public static $instance;
+
 
     /**
      * Constructor method
@@ -95,9 +97,9 @@ class FbStats
      *
      * @return object
      */
-    public static function getFbInstance($params)
+    public function getFbInstance($params)
     {
-        $fb = new Facebook(
+        self::$instance = new Facebook(
             array(
              'appId'  => $params['appId'],
              'secret' => $params['secret'],
@@ -105,7 +107,7 @@ class FbStats
             )
         );
 
-        return $fb;
+        return self::$instance;
 
     }//end getFbInstance()
 
@@ -434,6 +436,30 @@ class FbStats
         return $users;
 
     }//end getTopUsers()
+
+    /**
+     * This method sends data to facebook.
+     *
+     * @param string $sourceId facebook source to which data is to be sent
+     * @param string $message  message that need to be posted on the facebook
+     *
+     * @return void
+     */
+    public function sendInfo($sourceId, $message)
+    {
+        try {
+            $data = $this->facebook->api(
+                "/{$sourceId}/feed",
+                'POST',
+                array('message' => $message)
+            );
+			$posted = 1;
+        } catch (FacebookApiException $e) {
+            $result = $e->getResult();
+            throw new Exception($result['error']['message']);
+        }
+
+	}//end sendInfo()
 
 
 }//end class

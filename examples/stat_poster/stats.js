@@ -15,14 +15,13 @@ $(function(){
                 function(response){
                     console.log(response);
                     if (!response.error) {
-                        var wallPostForm = "<form id='frmWallPost' action='#' method='post'>"
-                                           + "<textarea id='wallPostMessage' name='wallPostMessage' rows='15' class='xxlarge'>" + response.success.plainText + "</textarea>"
-                                           + "<input type='submit' value='Post to Group wall' class='btn info' /><br />"
-                                           + "</form>";
-                        $("#result").html(wallPostForm);
+                        $("#sourceId").val(response.formData.group);
+                        $("#wallPostMessage").html(response.success.plainText);
+                        $("#data-sender").css("display", "block");
+                        $("#result").html("");
                     } else {
                         var errorMessage = "<div class='alert-message error'>" + response.error + "</div>";
-                        $("#result").html(wallPostForm);
+                        $("#result").html(errorMessage);
                     }
                 },
                 'json'
@@ -30,5 +29,31 @@ $(function(){
         } else {
             $("#result").html("<span class='error'>Please select a group and a statistic.</span>");
         }
+    });
+
+    $("#frmWallPost").submit(function(event){
+        event.preventDefault();
+        //if ($("#sourceId").val() && $("#wallPostMessage").val()) {
+            $("#result").prepend("<div class='alert-message info'>Posting to group's wall...</div>");
+            $.post(
+                "send_to_wall.php",
+                $("#frmWallPost").serializeArray(),
+                function(response){
+                    console.log(response);
+                    if (!response.error) {
+                        var message = "<div class='alert-message success'>" + response.success + "</div>";
+                    } else {
+                        var message = "<div class='alert-message error'>" + response.error + "</div>";
+                    }
+                    $("#data-sender").hide();
+                    $("#result").html(message);
+                },
+                "json"
+            );
+            return false;
+        /*} else {
+            $("#result").prepend("<div class='alert-message error'>Form does not have necessary fields.</span>");
+        }*/
+
     });
 });

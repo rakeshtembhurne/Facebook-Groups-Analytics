@@ -8,21 +8,6 @@ include_once 'helper.php';
 
 if (!session_id())
     session_start();
-
-$fb = new FbStats($config);
-
-$feedParams = array(
- 'sourceId' => $sourceId,
- 'limit' => 200,
- 'since' => 'last+Year',
-);
-
-//get Groups
-try {
-    $groups = $fb->getInfo('me/groups');
-} catch (Exception $e) {
-    echo '<div class="alert-message error">' . $e->getMessage() . '</div>';
-}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -52,6 +37,15 @@ try {
                 </div>
                 <div class="row">
                     <div class="span9">
+                        <?php
+                            //get Groups
+                            try {
+                                $fb = new FbStats($config);
+                                $groups = $fb->getInfo('me/groups');
+                            } catch (Exception $e) {
+                                echo '<div class="alert-message error">' . $e->getMessage() . '</div>';
+                            }
+                        ?>
                         <div class="row ml20">
                             <form id="frmStat" action="ajax.php" method="post">
                                 <label>Select Group</label>
@@ -96,6 +90,13 @@ try {
                                 <br/><br/>
                             </form>
                             <div id="result"></div>
+                            <div id="data-sender" style="display:none;">
+                                <form id='frmWallPost' action='#' method='POST'>
+                                   <input type='hidden' name='sourceId' id='sourceId' value='' />
+                                   <textarea id='wallPostMessage' name='wallPostMessage' rows='15' class='xxlarge'></textarea>
+                                   <input type='submit' value='Post to Group wall' class='btn info' /><br />
+                               </form>
+                            </div>
                         </div>
                     </div>
                     <div class="span4">
